@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <title>Library Management System</title>
+
+    <style>
+       
+        body {
+            display: block;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            height: 100%;
+            margin: 0;
+            background-position: center;
+            background-size: cover;
+            background-image: url('images/pexels-min-an-694740.jpg');
+            background-attachment: fixed;
+            
+        }
+
+
+        #booktable {
+            color: #fff;
+        }
+
+        .modal {
+            color: #212121;
+        }
+
+        h1 {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            color: #c4c2c2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .form-group input,
+        .form-group select {
+            transition: transform 0.3s ease;
+        }
+
+        .form-group input:hover,
+        .form-group select:hover {
+            border-color: #A68668;
+            box-shadow: 2px 2px 2px 2px #A68668;
+            transform: scale(1.05);
+        }
+
+        .form-group input:not(:hover),
+        .form-group select:not(:hover) {
+            transform: scale(1); 
+        }
+
+        .btn {
+             transition: transform 0.3s ease; 
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        .btn:active {
+            transform: scale(0.9); 
+        }
+
+        .container {
+            text-align: left;
+            border-radius: 10px;
+            border: solid 1px green;
+            background-image: url('images/national-emergency-library-1.jpg');
+            background-position: center;
+            background-size: cover;
+            padding-top: 50px;
+            padding-bottom: 20px;
+            width: 50%;
+            height: 100%;
+        }
+
+        
+        
+
+        .form-group label {
+            font-family: monospace;
+            margin-left: 40px;
+        }
+
+        .form-group select {
+            border-radius: 20px;
+            color: rgb(0, 0, 0); 
+            background-color: #c4c2c2;
+            box-shadow: 3px 3px 3px 3px #0003;
+            padding: 5px 5px;
+            font-family: Arial, Helvetica, sans-serif;
+            width: 450px;
+        }
+
+        .form-group input {
+            border-radius: 20px;  
+            color: #000000; 
+            background-color: #c4c2c2;   
+            box-shadow: 3px 3px 3px 3px #0003;
+            padding: 5px 5px;
+            font-family: Arial, Helvetica, sans-serif;
+            width: 450px;
+        }
+
+        #Fiction\ Genre,
+        #Non-Fiction\ Genre {
+            background-color: #c4c2c2; 
+        }
+
+        #addBtn {
+            border-radius: 15px;
+            border: solid 1px #964B00;
+            font-family: Courier;
+            margin: 3px;
+            background:  #A68668;
+            color: #fff;
+        }
+
+        #borrowBtn {
+            border-radius: 15px;
+            border: solid 1px #964B00;
+            font-family: Courier;
+            margin: 3px;
+            background:  #A68668;
+            color: #fff;
+        }
+
+        #returnBtn {
+            border-radius: 15px;
+            border: solid 1px #964B00;
+            font-family: Courier;
+            margin: 3px;
+            background:  #A68668;
+            color: #fff;
+        }
+
+        #clearBtn {
+            border-radius: 15px;
+            border: solid 1px #A68668;
+            font-family: Courier;
+            margin: 3px;
+            background: #B6465F;
+            color: #fff;
+        }
+
+        .forms .form  .container span{
+            color: #B6465F;
+        }
+        
+        #editModal {
+            backdrop-filter: blur(5px); 
+        }
+
+        #editModal .modal-content {
+            background: url('images/national-emergency-library-1.jpg') center center no-repeat;
+            background-size: cover;
+        }
+
+        /* booktable/database? */
+        #bookTable {
+            margin-top: 30px; 
+            background-color: rgba(255, 255, 255, 0.8); 
+            border-radius: 10px; 
+            overflow: hidden; 
+        }
+
+        #bookTable th, #bookTable td {
+            text-align: center; 
+            vertical-align: middle; 
+        }
+
+        #bookTable th {
+            background-color: #A68668; 
+            color: #000000; 
+        }
+
+        #bookTable tbody tr:nth-child(even) {
+            background-color: #F0F0F0;
+        }
+
+        #bookTable tbody tr:hover {
+            background-color: #D3D3D3;
+        }
+
+        #bookTable td:last-child {
+            white-space: nowrap;
+        }
+
+        #bookTable .editBtn, #bookTable .deleteBtn {
+            padding: 5px 10px; 
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+    
+        #bookTable .editBtn {
+            background-color: #DAA520;
+            border: none;
+        }
+
+        #bookTable .deleteBtn {
+            background-color: #8B4513; 
+            border: none;
+        }   
+      
+        
+</style>
+</head>
+
+<body>
+
+   <section class="forms">
+    <div class="form">
+        <div class="container">
+            <h1 class="text-center">Library Management <span>System</span></h1>
+            <form id="bookForm">
+
+                <div class="form-group">
+                    <label for="Student"></label>
+                    <center>
+                        <input 
+                    type="text" 
+                    id="Student" 
+                    class="form-control text-center" 
+                    placeholder="Student Number" 
+                    required/>
+                    </center>
+                </div><br>    
+
+                <div class="form-group ">
+                <label for="Categories"></label><br>
+               <center> <select name="Categories" id="Categories" class="custom-select form-control text-center">
+                    <option value=""  disabled selected>Categories For Genres</option>
+                  <option value="Fiction">Fiction</option>
+                  <option value="Non-Fiction">Non-Fiction</option> 
+                </select></center>
+                </div><br>
+
+                <div class="form-group ">
+                <label for="Fiction"></label><br>
+                 <center><select name="Fiction" id="Fiction Genre"  class="custom-select form-control text-center">
+                <option value=""  disabled selected> Fiction Genre</option>
+                 <option value="Action and adventure">Action and adventure</option>
+                 <option value="Children's">Children's</option>
+                  <option value="Comic book">Comic book</option>
+                 <option value="Crime">Crime</option>
+                 <option value="Drama">Drama</option>
+                  <option value="Fantasy">Fantasy</option>
+                 <option value="Horror">Horror</option>
+                 <option value="Mystery">Mystery</option>
+                 <option value="Poetry">Poetry</option>
+                 <option value="Romance">Romance</option>
+                 <option value="Science fiction">Science fiction</option>
+                 <option value="Short story">Short story</option>
+                 <option value="Thriller">Thriller</option>
+                 <option value="Young adult">Young adult</option>
+                </select>
+            </center>
+                </div><br>
+      
+                <div class="form-group">
+                <label for="Non-Fiction"></label><br>
+               <center> <select name="Non-Fiction" id="Non-Fiction Genre" class="custom-select form-control text-center">
+                    <option value=""  disabled selected>Non-Fiction Genre</option>
+                  <option value="Autobiography">Autobiography</option>
+                  <option value="Biography">Biography</option>
+                  <option value="Business/economics">Business/economics</option>
+                  <option value="Crafts/hobbies">Crafts/hobbies</option>
+                   <option value="Cookbook">Cookbook</option>
+                   <option value="Dictionary">Dictionary</option>
+                   <option value="Encyclopedia">Encyclopedia</option>
+                   <option value="History">History</option>
+                    <option value="Journal">Journal</option>
+                    <option value="Philosophy">Philosophy</option>
+                    <option value="Textbook">Textbook</option>
+                    <option value="True crime">True crime</option>
+                     <option value="Science">Science</option>
+                     <option value="Sports and leisure">Sports and leisure</option>
+                </select></center>
+                </div><BR>
+
+               
+        
+
+                    <div class="form-group">
+                        <label for="bookTitle"></label><br>
+                        <center>
+                            <input type="text" id="bookTitle" class="form-control text-center" placeholder="Book Title">
+                        </center>
+                    </div><br>
+
+                <div class="form-group">
+                    <label for="author"></label>
+                    <center>
+                        <input 
+                    type="text" 
+                    id="author" 
+                    class="form-control text-center" 
+                    placeholder="Author's Name" 
+                    required />
+                    </center>
+                </div><br>    
+
+                <div class="form-group">
+                    <label for="year"></label>
+                    <center>
+                        <input 
+                            type="text" 
+                            id="year" 
+                            class="form-control text-center" 
+                            placeholder="Year" 
+                            required />
+                    </center>
+                </div><br>
+                <div class="form-group">
+                    <label for="quantity"></label>
+                    <center>
+                        <input 
+                        type="number" 
+                        id="quantity" 
+                        class="form-control text-center" 
+                        placeholder="Quantity" 
+                        required />
+                    </center>
+                </div><br>
+                
+
+                <center>
+                    <div class="buttons">
+                        <button class="btn btn-success" type="button" id="addBtn">
+                            Add Book
+                          </button>
+                        <button class="btn btn-success" type="button" id="borrowBtn">
+                            Borrow Book
+                        </button>
+                        <button class="btn btn-warning " type="button" id="clearBtn">
+                            Clear
+                        </button>
+                        <button class="btn btn-warning " id="clearBtn" onclick="logout()">
+                            Logout
+                        </button>
+                    </div>
+                </center>
+
+            </form><br>
+
+        </div>
+
+        <div class="modal fade" id="editModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                  
+                    <div class="modal-body">
+                        <form action="" id="editForm">
+                            <div class="form-group">
+                                <label for="Student"></label>
+                                <center>
+                                    <input 
+                                type="text" 
+                                id="Student" 
+                                class="form-control text-center" 
+                                placeholder="Student Number" 
+                                required />
+                                </center>
+                            </div><br>    
+            
+                            <div class="form-group ">
+                            <label for="editCategories"></label><br>
+                        <center> <select name="editCategories" id="editCategories" class="custom-select form-control text-center">
+                                <option value="" disabled>Select categories for genres</option>
+                              <option value="Fiction">Fiction</option>
+                              <option value="Non-Fiction">Non-Fiction</option> 
+                            </select> </center><br>
+                            </div>
+            
+                            <div class="form-group ">
+                            <label for="editFiction"></label><br>
+                        <center> <select name="editFiction" id="editFiction editGenreC" class="Genre custom-select form-control text-center">
+                            <option value="" disabled selected>Select Fiction Genre</option>
+                             <option value="Action and adventure">Action and adventure</option>
+                             <option value="Children's">Children's</option>
+                              <option value="Comic book">Comic book</option>
+                             <option value="Crime">Crime</option>
+                             <option value="Drama">Drama</option>
+                              <option value="Fantasy">Fantasy</option>
+                             <option value="Horror">Horror</option>
+                             <option value="Mystery">Mystery</option>
+                             <option value="Poetry">Poetry</option>
+                             <option value="Romance">Romance</option>
+                             <option value="Science fiction">Science fiction</option>
+                             <option value="Short story">Short story</option>
+                             <option value="Thriller">Thriller</option>
+                             <option value="Young adult">Young adult</option>
+                            </select></center>
+                            </div>
+                  
+                            <div class="form-group ">
+                            <label for="editNon-Fiction"></label><br>
+                        <center>  <select name="editNon-Fiction" id="editNon-Fiction editGenreC" class="Genre custom-select form-control text-center">
+                                <option value="" disabled selected>Select Non-Fiction Genre</option>
+                              <option value="Autobiography">Autobiography</option>
+                              <option value="Biography">Biography</option>
+                              <option value="Business/economics">Business/economics</option>
+                              <option value="Crafts/hobbies">Crafts/hobbies</option>
+                               <option value="Cookbook">Cookbook</option>
+                               <option value="Dictionary">Dictionary</option>
+                               <option value="Encyclopedia">Encyclopedia</option>
+                               <option value="History">History</option>
+                                <option value="Journal">Journal</option>
+                                <option value="Philosophy">Philosophy</option>
+                                <option value="Textbook">Textbook</option>
+                                <option value="True crime">True crime</option>
+                                 <option value="Science">Science</option>
+                                 <option value="Sports and leisure">Sports and leisure</option>
+                            </select></center>
+                            </div>
+            
+                           
+                    
+            
+                            <div class="form-group">
+                                <label for="editBookTitle"></label><br>
+                                <center>
+                                    <select name="editBookTitle" id="editBookTitle" class="form-control text-center">
+                                        <option value="" disabled selected>Book Title </option>
+                                        <option value="">random</option>
+                                        <option value="">random</option>
+                                        <option value="">random</option>
+                                    </select>
+                                </center>
+                            </div><br>
+            
+        
+                            <div class="form-group">
+                                <label for="editAuthor"></label>
+                                <input 
+                                    type="text" 
+                                    id="editAuthor" 
+                                    class="form-control text-center" 
+                                    placeholder="Author Name" 
+                                    required />
+                            </div><br>    
+        
+                            <div class="form-group">
+                                <label for="editGenre"></label>
+                                    
+        
+                                <div class="form-group">
+                               
+                                    <center>
+                                        <input 
+                                            type="text" 
+                                            id="year" 
+                                            class="form-control text-center" 
+                                            placeholder="Year" 
+                                            required
+                                            maxlength="4"  />
+                                    </center>
+                                </div><br>
+        
+                            <div class="form-group">
+                                <label for="editQuantity"></label>    
+                                <input 
+                                    type="text" 
+                                    id="editQuantity" 
+                                    class="form-control text-center" 
+                                    placeholder="Quantity" 
+                                    required
+                                    maxlength="2"  />
+                            </div><br>
+                
+                            <center>
+                                <input 
+                                type="hidden" 
+                                id="editBookId"
+                                >
+
+                                <button 
+                                class="btn btn-success" 
+                                type="submit" 
+                                id="editBtn">
+                                    Save Changes    
+                                </button>
+
+                                <button class="btn btn-danger ml-2" 
+                                type="button" 
+                                id="clsBtn"
+                                data-bs-dismiss="modal">
+                                    Close
+                                </button>
+
+                            </center>
+                        </form>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+   </section>
+<section>
+     <!--TABLE-->
+     <table class="table mt-4" id="bookTable">
+        <thead>
+            <tr>
+                <th>Student Number</th>
+                <th>Categories</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Year</th>
+                <th>Quantity</th>
+                <th>Date / Due Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>   
+    
+</section>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" 
+integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" 
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous" ></script>
+
+    <script>
+
+
+function capitalizeFirstLetter(text) {
+
+    let words = text.split(' ');
+
+    let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+
+
+    return capitalizedWords.join(' ');
+}
+
+
+function addBook(book) {
+    let table = $("#bookTable tbody");
+    table.append(`
+        <tr id="${book.id}" class="book-added">
+            <td style="background-color: #c4c2c2;">${book.Student}</td>
+            <td style="background-color: #c4c2c2;">${book.Categories}</td>
+            <td style="background-color: #c4c2c2;">${capitalizeFirstLetter(book.title)}</td>
+            <td style="background-color: #c4c2c2;">${capitalizeFirstLetter(book.author)}</td>
+            <td style="background-color: #c4c2c2;">${book.genre}</td>
+            <td style="background-color: #c4c2c2;">${book.year}</td>
+            <td style="background-color: #c4c2c2;">${book.quantity}</td>
+            <td style="background-color: #c4c2c2;">${book.Date}</td>
+            <td style="background-color: #c4c2c2;">Available</td>
+            <td>
+               
+                <button class="btn btn-sm btn-success borrowBtn" data-id="${book.id}">
+                    Borrow
+                </button>
+            </td>
+        </tr>`);
+        $(`#${book.id} td:eq(9)`).append(`
+        <button class="btn btn-sm btn-info returnBtn btn-danger ml-2" data-id="${book.id}" disabled>
+            Return Book
+        </button>
+
+        <button class="btn btn-sm btn-danger deleteBtn" data-id="${book.id}">
+                    Delete
+                </button>
+    `);
+}
+ 
+	let Books = [];
+
+       
+
+        //BORROW BUTTON
+        function borrowedBook(book) {
+    let table = $("#bookTable tbody");
+
+    table.append(`
+    <tr id="${book.id}">
+        <td style="background-color: #c4c2c2;">${book.Student}</td>
+        <td style="background-color: #c4c2c2;">${book.Categories}</td>
+        <td style="background-color: #c4c2c2;">${capitalizeFirstLetter(book.title)}</td>
+        <td style="background-color: #c4c2c2;">${capitalizeFirstLetter(book.author)}</td>
+        <td style="background-color: #c4c2c2;">${book.genre}</td>
+        <td style="background-color: #c4c2c2;">${book.year}</td>
+        <td style="background-color: #c4c2c2;">${book.quantity}</td>
+        <td style="background-color: #c4c2c2;">${book.Date} / ${book.DueDate}</td>
+        <td style="background-color: #c4c2c2;">Borrowed</td>
+        <td>
+            
+            
+        </td>
+    </tr>`);
+
+   
+    $(`#${book.id} td:eq(9)`).append(`
+    <button class="btn btn-sm btn-info returnBtn btn-danger ml-2" data-id="${book.id}">
+            Return Book
+        </button>
+        <button class="btn btn-sm btn-danger deleteBtn" data-id="${book.id}">
+                Delete
+            </button>
+    `);
+}
+
+$(document).on("click", "#borrowBtn", function () {
+    let selectedCategory = $("#Categories").val();
+    let selectedFictionGenre = $("#Fiction\\ Genre").val();
+    let selectedNonFictionGenre = $("#Non-Fiction\\ Genre").val();
+
+    if ($("#Student").val() === "" || selectedCategory === null
+        || ((selectedCategory === "Fiction" || selectedCategory === "Non-Fiction")
+            && (selectedFictionGenre === null && selectedNonFictionGenre === null))
+        || $("#bookTitle").val() === "" || $("#author").val() === ""
+        || $("#genre").val() === "" || $("#year").val() === "" || $("#quantity").val() === "") {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    const currentDate = new Date();
+    let selectedGenre = "";
+    if (selectedCategory === "Fiction") {
+        selectedGenre = selectedFictionGenre;
+    } else if (selectedCategory === "Non-Fiction") {
+        selectedGenre = selectedNonFictionGenre;
+    }
+
+    let book = {
+        id: generateId(),
+        Student: $("#Student").val(),
+        Categories: selectedCategory,
+        title: capitalizeFirstLetter($("#bookTitle").val()),
+        author: capitalizeFirstLetter($("#author").val()),
+        genre: selectedGenre,
+        year: $("#year").val(),
+        quantity: $("#quantity").val(),
+        Date: currentDate.toLocaleDateString(),
+        DueDate: new Date(currentDate.getTime() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString()
+    };
+
+    Books.push(book);
+    borrowedBook(book);
+
+    clearForm();
+    alert("Book borrowed successfully!");
+});
+
+        //RETURN BUTTON!!!!
+        function returnedBook(book, status = "Returned") {
+    let table = $("#bookTable tbody");
+    table.append(`
+    <tr id="${book.id}">
+        <td>${book.Student}</td>
+        <td>${book.Categories}</td>
+        <td>${book.title}</td>
+        <td>${book.author}</td>
+        <td>${book.genre}</td>
+        <td>${book.year}</td>
+        <td>${book.quantity}</td>
+        <td>${book.Date}</td>
+        <td>${status}</td>
+        <td>
+            <button class="btn btn-sm btn-warning editBtn" data-id="${book.id}">
+                Edit
+            </button>
+            <button class="btn btn-sm btn-danger deleteBtn" data-id="${book.id}">
+                Delete
+            </button>
+        </td>
+    </tr>`);
+
+    $(`#${book.id} .returnBtn`).click(function() {
+        alert(`Book with ID ${book.id} has been returned.`);
+    });
+}
+
+$(document).on("click", "#returnBtn", function (){;
+    const currentDate = new Date();
+    let book = {
+        id: generateId(),
+        Student: $("#Student").val(),
+        Categories: $("#Categories").val(),
+        title: $("#bookTitle").val(),
+        author: $("#author").val(),
+        genre: $("#genre").val(),
+        year: $("#year").val(),
+        quantity: $("#quantity").val(),
+        Date: currentDate.toLocaleDateString(),
+        DueDate: new Date(currentDate.getTime() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString()
+    };
+    
+    Books.push(book);
+    returnedBook(book);
+
+    clearForm();
+    
+});
+
+
+//CLEAR BUTTON
+function clearForm(){
+    $("#Categories").prop("selectedIndex", 0);
+    $("#Fiction\\ Genre").prop("selectedIndex", 0);
+    $("#Non-Fiction\\ Genre").prop("selectedIndex", 0);
+    $("#Student").val("");
+    $("#bookTitle").val("");
+    $("#author").val("");
+    $("#genre").val("");
+    $("#year").val("");
+    $("#quantity").val("");
+}
+
+
+function generateId(){
+    return Math.floor(Math.random() * 100000);
+}
+
+$(document).on("click", "#clearBtn", function (){
+    clearForm();
+});
+
+
+
+function deleteBook(id) {
+    let confirmation = window.confirm("Are you sure you want to delete this book?");
+
+    if (confirmation) {
+        Books = Books.filter(book => book.id !== id);
+        $("#" + id).remove();
+    } else {
+        console.log("Delete operation canceled.");
+    }
+}
+
+
+function editBook(id) {
+   
+    let book = Books.find(book => book.id === id);
+    const currentDate = new Date();
+ 
+        $("#editStudent").val(book.Student); 
+        $("#editCategories").val(book.Categories);
+        $("#editBookTitle").val(book.title);
+        $("#editAuthor").val(book.author);
+        $("#editGenre").val(book.genre);
+        $("#editYear").val(book.year);
+        $("#editQuantity").val(book.quantity);
+        $("#editBookId").val(book.id);
+        $("#editDate").val(book.Date);
+
+            $("#editModal").modal("show");
+        }
+
+
+        $(document).on("click", ".deleteBtn", function() {
+            let id = $(this).data("id");
+            deleteBook(id);
+        });
+
+        $(document).on("click", ".editBtn", function() {
+            let id = $(this).data("id");
+            editBook(id);
+        });
+
+        $("#editForm").submit(function(e) {
+            e.preventDefault();
+
+    // Get the edited book details from the form
+    let id = $("#editBookId").val();
+    const currentDate = new Date();
+    let editedBook = {
+        Date: $("#editStudent").val(),
+        Categories: $("#editCategories").val(),
+        title: $("#editBookTitle").val(),
+        author: $("#editAuthor").val(),
+        genre: $("#editGenre").val(),
+        year: $("#editYear").val(),
+        quantity: $("#editQuantity").val(),
+        Date:currentDate.toLocaleDateString(),
+        id: id
+    };
+
+    // Update the book in the array
+    let index = Books.findIndex(book => book.id === id);
+    Books[index] = editedBook;
+
+    // Update the corresponding row in the table
+    $("#" + id + " td:eq(0)").text(editedBook.Student);
+    $("#" + id + " td:eq(1)").text(editedBook.Categories);
+    $("#" + id + " td:eq(2)").text(editedBook.title);
+    $("#" + id + " td:eq(3)").text(editedBook.author);
+    $("#" + id + " td:eq(4)").text(editedBook.genre);
+    $("#" + id + " td:eq(5)").text(editedBook.year);
+    $("#" + id + " td:eq(6)").text(editedBook.quantity);
+   
+
+    // Hide the edit modal
+    $("#editModal").modal("hide");
+});
+
+function updateBookStatus(id, status) {
+    let bookStatus = $("#" + id + " td:eq(8)"); // Update the 8th column (Status)
+    bookStatus.text(status);
+}
+
+
+
+//LOGOUT
+
+function logout() {
+      window.location.href = 'http://localhost/lib/loginlib.php';
+    }
+
+
+//INPUT NUMBER ONLY
+
+function validateInput(inputElement) {
+      const inputValue = inputElement.value;
+      const isValid = /^\d+$/.test(inputValue);
+      if (!isValid) {
+        alert("Please enter a valid number.");
+        inputElement.value = "";  
+      }
+    }
+
+   
+    document.getElementById("Student").addEventListener("input", function () {
+      validateInput(this);
+    });
+
+    document.getElementById("quantity").addEventListener("input", function () {
+      validateInput(this);
+    });
+
+    document.getElementById("year").addEventListener("input", function () {
+    validateInput(this);
+    });
+
+//REQUIRED FOR FILLUP
+
+$(document).on("click", "#addBtn", function () {
+    let selectedCategory = $("#Categories").val();
+    let selectedFictionGenre = $("#Fiction\\ Genre").val();
+    let selectedNonFictionGenre = $("#Non-Fiction\\ Genre").val();
+
+    if ($("#Student").val() === "" || selectedCategory === null
+        || ((selectedCategory === "Fiction" || selectedCategory === "Non-Fiction")
+            && (selectedFictionGenre === null && selectedNonFictionGenre === null))
+        || $("#bookTitle").val() === "" || $("#author").val() === ""
+        || $("#genre").val() === "" || $("#year").val() === "" || $("#quantity").val() === "") {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    const currentDate = new Date();
+    let selectedGenre = "";
+    if (selectedCategory === "Fiction") {
+        selectedGenre = selectedFictionGenre;
+    } else if (selectedCategory === "Non-Fiction") {
+        selectedGenre = selectedNonFictionGenre;
+    }
+
+    let book = {
+        id: generateId(),
+        Student: $("#Student").val(),
+        Categories: selectedCategory,
+        title: $("#bookTitle").val(),
+        author: $("#author").val(),
+        genre: selectedGenre,
+        year: $("#year").val(),
+        quantity: $("#quantity").val(),
+        Date: currentDate.toLocaleDateString(),
+        DueDate: new Date(currentDate.getTime() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString()
+    };
+
+    Books.push(book);
+    addBook(book);
+
+    clearForm();
+
+    alert("Book added successfully!");
+});
+
+
+
+//FICTION (DISABLE)
+$(document).ready(function() {
+    
+    $("#Fiction\\ Genre, #Non-Fiction\\ Genre").prop("disabled", true);
+
+  
+    $("#Categories").change(function() {
+        var selectedCategory = $(this).val();
+
+     
+        if (selectedCategory === "Fiction") {
+            $("#Fiction\\ Genre").prop("disabled", false);
+            $("#Non-Fiction\\ Genre").prop("disabled", true);
+        } else if (selectedCategory === "Non-Fiction") {
+            $("#Fiction\\ Genre").prop("disabled", true);
+            $("#Non-Fiction\\ Genre").prop("disabled", false);
+        } else {
+
+            $("#Fiction\\ Genre, #Non-Fiction\\ Genre").prop("disabled", true);
+        }
+    });
+});
+
+$(document).on("change", "#editCategories", function () {
+    var selectedCategory = $(this).val();
+
+    if (selectedCategory === "Fiction") {
+        $("#editFiction").prop("disabled", false);
+        $("#editNon-Fiction").prop("disabled", true);
+    } else if (selectedCategory === "Non-Fiction") {
+        $("#editFiction").prop("disabled", true);
+        $("#editNon-Fiction").prop("disabled", false);
+    } else {
+        $("#editFiction, #editNon-Fiction").prop("disabled", true);
+    }
+});
+
+$(document).on("change", "#editCategories", function () {
+    var selectedCategory = $(this).val();
+
+    if (selectedCategory === "Fiction") {
+        $("#editFiction").prop("disabled", false);
+        $("#editNon-Fiction").prop("disabled", true);
+    } else if (selectedCategory === "Non-Fiction") {
+        $("#editFiction").prop("disabled", true);
+        $("#editNon-Fiction").prop("disabled", false);
+    } else {
+        $("#editFiction, #editNon-Fiction").prop("disabled", true);
+    }
+});
+
+
+//YEAR INPUT LIMIT limit
+function validateYearInput(inputElement) {
+    const inputValue = inputElement.value;
+
+    if (inputValue === "") {
+        return;
+    }
+
+    const isValidYear = /^\d{0,4}$/.test(inputValue);
+
+    if (!isValidYear) {
+        alert("Please enter a valid 4-digit year.");
+     
+        inputElement.value = inputValue.replace(/\D/g, '').slice(0, 4);
+    }
+}
+
+document.getElementById("year").addEventListener("input", function (event) {
+    validateYearInput(event.target);
+});
+
+
+//QUAITY INPUT limit
+function validateQuantityInput(event) {
+    const inputElement = event.target;
+    const inputValue = inputElement.value;
+    
+    const isValidQuantity = /^\d{0,2}$/.test(inputValue) && inputValue[0] !== '0';
+
+    if (!isValidQuantity) {
+        alert("Please enter a valid quantity (1-99).");
+        inputElement.value = inputValue.slice(0, -1);
+    }
+}
+
+document.getElementById("quantity").addEventListener("input", function (event) {
+    validateQuantityInput(event);
+});
+
+// RETURNING THE BOOK STATUS VALUE
+$(document).on("click", ".returnBtn", function () {
+    let button = $(this);
+    let confirmation = window.confirm("Are you sure you want to return this book?");
+    
+    if (confirmation) {
+        let id = button.data("id");
+        updateBookStatus(id, "Returned");
+        
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleDateString();
+        $("#" + id + " td:eq(7)").text(formattedDate);
+        
+        button.prop("disabled", true);
+        alert("Book has been returned successfully.");
+    } else {
+        console.log("Return operation canceled.");
+    }
+});
+
+
+// AFTER ADDING BE ABLE TO BORROW IT
+function handleBorrowButtonClick(bookId) {
+    let book = Books.find(book => book.id === bookId);
+
+  
+    if (book && book.status !== "Borrowed") {
+      
+        updateBookStatus(bookId, "Borrowed");
+
+        const currentDate = new Date();
+
+   
+        book.Date = currentDate.toLocaleDateString();
+        book.DueDate = new Date(currentDate.getTime() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString();
+
+        $("#" + bookId + " .returnBtn").prop("disabled", false);
+        $("#" + bookId + " td:eq(7)").text(`${book.Date} / ${book.DueDate}`);
+
+     
+        alert(`Book borrowed successfully!\nDue date: ${book.DueDate}`);
+    } else {
+        console.log("Book is not available for borrowing.");
+      }
+    }
+
+        $(document).on("click", ".borrowBtn", function () {
+            let bookId = $(this).data("id");
+            
+            let confirmation = window.confirm("Are you sure you want to borrow this book?");
+            
+            if (confirmation) {
+                handleBorrowButtonClick(bookId);
+            
+                $(this).prop("disabled", true);
+            } else {
+                console.log("Borrow operation canceled.");
+            }
+        });
+
+
+	</script>
+</body>
+</html>
